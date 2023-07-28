@@ -12,5 +12,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-12-22
  */
 public interface UserMapper extends BaseMapper<User> {
-
+    /**
+     * 登陆时 根据手机号码找用户
+     * @param phone
+     * @return
+     */
+    User getUserByPhone(String phone);
 }

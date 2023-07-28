@@ -5,7 +5,7 @@ spring:
     name: comment
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///redis?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql:///redis?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: "123456"
   redis:
@@ -28,6 +28,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
-    com.linyun: info
+    com.linyun.comment: info
   pattern:
     dateformat: mm:ss.SSS
