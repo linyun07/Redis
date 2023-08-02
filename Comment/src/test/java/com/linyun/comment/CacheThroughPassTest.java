@@ -41,7 +41,7 @@ public class CacheThroughPassTest {
 //        queryWithMutex(id);
 //        Shop shop = queryWithLogicExpire(id);
 //        System.err.println(shop);
-        saveShopForExpireTime(1L,20L);
+        saveShopForExpireTime(2L,20L);
 
     }
 

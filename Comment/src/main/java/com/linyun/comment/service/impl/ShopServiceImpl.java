@@ -40,9 +40,10 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     public Result selectById(Long id) {
         Shop shop = null;
         //缓存穿透
-        if (id>=1&&id<=2) {
+        if (id == 1 || id == 2) {
             //逻辑过期
             shop = cacheClient.queryWithLogicExpire(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+            return Result.ok(shop);
         }
 //        cacheClient.queryWithThroughPass(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
         //互斥锁
