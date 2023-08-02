@@ -1,5 +1,6 @@
 package com.linyun.comment.service;
 
+import com.linyun.comment.dto.Result;
 import com.linyun.comment.pojo.ShopType;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-12-22
  */
 public interface IShopTypeService extends IService<ShopType> {
+
+    /**
+     * 查询标题
+     * @return
+     */
+    Result getAllType();
 
 }

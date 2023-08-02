@@ -12,5 +12,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-12-22
  */
 public interface ShopMapper extends BaseMapper<Shop> {
-
+    /**
+     * 根据id查商品
+     * @param id
+     * @return
+     */
+    Shop getShopById(Long id);
 }

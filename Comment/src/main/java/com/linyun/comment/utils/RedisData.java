@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author linyun
+ */
 @Data
 public class RedisData {
     private LocalDateTime expireTime;
