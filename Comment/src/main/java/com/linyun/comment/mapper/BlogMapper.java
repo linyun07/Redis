@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface BlogMapper extends BaseMapper<Blog> {
 
+    int updateAddLikedById(Long id);
+    int updateSubLikedById(Long id);
 }

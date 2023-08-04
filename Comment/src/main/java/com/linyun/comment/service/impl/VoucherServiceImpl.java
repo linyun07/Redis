@@ -1,5 +1,6 @@
 package com.linyun.comment.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.linyun.comment.dto.Result;
 import com.linyun.comment.pojo.Voucher;
@@ -7,6 +8,8 @@ import com.linyun.comment.mapper.VoucherMapper;
 import com.linyun.comment.pojo.SeckillVoucher;
 import com.linyun.comment.service.ISeckillVoucherService;
 import com.linyun.comment.service.IVoucherService;
+import com.linyun.comment.utils.RedisConstants;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
 
     @Resource
     private ISeckillVoucherService seckillVoucherService;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     public Result queryVoucherOfShop(Long shopId) {
@@ -47,5 +52,8 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         seckillVoucher.setBeginTime(voucher.getBeginTime());
         seckillVoucher.setEndTime(voucher.getEndTime());
         seckillVoucherService.save(seckillVoucher);
+        //保存秒杀券到redis库存
+        stringRedisTemplate.opsForValue().set(RedisConstants.SECKILL_STOCK_KEY+voucher.getId(), voucher.getStock().toString());
+
     }
 }

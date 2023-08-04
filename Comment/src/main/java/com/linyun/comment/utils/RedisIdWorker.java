@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author linyun
@@ -18,28 +19,29 @@ public class RedisIdWorker {
     /**
      * 开始时间戳
      */
-    public static final long BEGIN_TIMEsTAMP=1690973756;
+    public static final long BEGIN_TIMEsTAMP = 1690973756;
     /**
      * 位数
      */
-    public static final int COUNT_BITS=32;
+    public static final int COUNT_BITS = 32;
 
-private StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     public RedisIdWorker(StringRedisTemplate stringRedisTemplate) {
         this.stringRedisTemplate = stringRedisTemplate;
     }
 
-    public Long nextId(String keyPrefix){
+    public Long nextId(String keyPrefix) {
         //生成时间戳
         long nowSecond = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        long timeTamp=System.currentTimeMillis()-BEGIN_TIMEsTAMP;
+        long timeTamp = System.currentTimeMillis() - BEGIN_TIMEsTAMP;
         //生成序列号
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy:MM:dd"));
         Long count = stringRedisTemplate.opsForValue().increment("icr:" + keyPrefix + ":" + date);
+        stringRedisTemplate.expire("icr:" + keyPrefix + ":" + date, 10L, TimeUnit.SECONDS);
         //拼接返回
 
-        return timeTamp<<COUNT_BITS|count;
+        return timeTamp << COUNT_BITS | count;
     }
 
 }

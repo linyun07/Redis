@@ -29,9 +29,13 @@ public class BlogController {
 
     @Resource
     private IBlogService blogService;
-    @Resource
-    private IUserService userService;
 
+    /**
+     * 保存评论
+     *
+     * @param blog
+     * @return
+     */
     @PostMapping
     public Result saveBlog(@RequestBody Blog blog) {
         // 获取登录用户
@@ -43,14 +47,23 @@ public class BlogController {
         return Result.ok(blog.getId());
     }
 
+    /**
+     * 修改点赞数量
+     *
+     * @param id
+     * @return
+     */
     @PutMapping("/like/{id}")
     public Result likeBlog(@PathVariable("id") Long id) {
-        // 修改点赞数量
-        blogService.update()
-                .setSql("liked = liked + 1").eq("id", id).update();
-        return Result.ok();
+        return blogService.likeBlog(id);
     }
 
+    /**
+     * 查询用户评论
+     *
+     * @param current
+     * @return
+     */
     @GetMapping("/of/me")
     public Result queryMyBlog(@RequestParam(value = "current", defaultValue = "1") Integer current) {
         // 获取登录用户
@@ -63,21 +76,49 @@ public class BlogController {
         return Result.ok(records);
     }
 
+    /**
+     * 查询热门评论
+     *
+     * @param current
+     * @return
+     */
     @GetMapping("/hot")
     public Result queryHotBlog(@RequestParam(value = "current", defaultValue = "1") Integer current) {
+        return blogService.queryHotBlog(current);
+    }
+
+    /**
+     * 查看评论
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    public Result queryBolgById(@PathVariable Long id) {
+        return blogService.queryBolgById(id);
+    }
+
+    /**
+     * 查看评价点赞用户
+     * @param id
+     * @return
+     */
+    @GetMapping("/likes/{id}")
+    public Result queryLikesUser(@PathVariable Long id){
+        return blogService.queryLikesUser(id);
+    }
+
+    @GetMapping("/of/user")
+    public Result queryBlogByUserId(
+            @RequestParam(value = "current", defaultValue = "1") Integer current,
+            @RequestParam("id") Long id) {
         // 根据用户查询
         Page<Blog> page = blogService.query()
-                .orderByDesc("liked")
-                .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+                .eq("user_id", id).page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
         // 获取当前页数据
         List<Blog> records = page.getRecords();
-        // 查询用户
-        records.forEach(blog ->{
-            Long userId = blog.getUserId();
-            User user = userService.getById(userId);
-            blog.setName(user.getNickName());
-            blog.setIcon(user.getIcon());
-        });
         return Result.ok(records);
     }
+
+
 }
